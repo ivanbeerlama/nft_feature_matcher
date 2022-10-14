@@ -50,16 +50,18 @@ if roi is not None:
         
         image2 = cv2.imread(f)
         
-        result = cv2.matchTemplate(image2, feature, cv2.TM_CCOEFF_NORMED, mask)
+        image2 = image2[y:y+h, x:x+w]
+
+        result = cv2.matchTemplate(image2, feature, cv2.TM_CCOEFF_NORMED)
 
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
         
         threshold = 0.8
         flag = False
-        y = 0.0;
+        yy = 0.0;
 
-        if np.amax(result) > y:
-            y = np.amax(result)
+        if np.amax(result) > yy:
+            yy = np.amax(result)
         if np.amax(result) > threshold:
             flag = True
 
@@ -67,11 +69,11 @@ if roi is not None:
           top_left = max_loc
           bottom_right = (top_left[0] + w, top_left[1] + h)
 
-          cv2.rectangle(image2, top_left, bottom_right, (0, 255, 0), int(image2.shape[0] / 100))
+          cv2.rectangle(image2, top_left, bottom_right, (0, 255, 0), int(image2.shape[0] / 10))
         
-        print(str(y) + " -> " + str(flag))
+        print(str(yy) + " -> " + str(flag))
 
-        result_list.append([y,flag,filename])
+        result_list.append([yy,flag,filename])
         
         cv2.imshow("Feature matching", image2)
 
